@@ -1,0 +1,88 @@
+# Конфигурация сайта
+title: "Удивительный мир металлов"
+description: "Книга для подростков о металлах и металлургии"
+author: "Алексей Григорьев"
+lang: ru-RU
+locale: ru_RU
+
+# URL настройки
+baseurl: "/little-book-of-metals-ru" # название репозитория без https://github.com/username/
+url: "https://alexeygrigorev.com" # замените USERNAME на ваш GitHub логин
+
+# Настройки Jekyll
+markdown: kramdown
+highlighter: rouge
+kramdown:
+  input: GFM
+  hard_wrap: false
+  syntax_highlighter: rouge
+
+# Плагины
+plugins:
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-paginate
+
+# Исключения
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+
+# Настройки по умолчанию для страниц
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "default"
+  - scope:
+      path: "часть_1_история"
+    values:
+      layout: "chapter"
+      part: "Часть 1: История металлургии"
+  - scope:
+      path: "часть_2_основы"
+    values:
+      layout: "chapter"
+      part: "Часть 2: Основы металлургии"
+  - scope:
+      path: "часть_3_металлы"
+    values:
+      layout: "chapter"
+      part: "Часть 3: Галерея металлов"
+  - scope:
+      path: "часть_4_применения"
+    values:
+      layout: "chapter"
+      part: "Часть 4: Металлы вокруг нас"
+  - scope:
+      path: "часть_5_практика"
+    values:
+      layout: "chapter"
+      part: "Часть 5: Практика и будущее"
+
+# Навигация
+navigation:
+  - title: "Главная"
+    url: "/"
+  - title: "История"
+    url: "/часть_1_история/"
+  - title: "Основы"
+    url: "/часть_2_основы/"
+  - title: "Металлы"
+    url: "/часть_3_металлы/"
+  - title: "Применения"
+    url: "/часть_4_применения/"
+  - title: "Практика"
+    url: "/часть_5_практика/"
+
+# Тема (используем минимальную тему GitHub Pages)
+theme: minima
+
+# Настройки для русского языка
+timezone: Europe/Moscow

@@ -1,0 +1,37 @@
+# Jekyll
+_site/
+.sass-cache/
+.jekyll-cache/
+.jekyll-metadata
+
+# Ruby/Bundler
+vendor/
+.bundle/
+Gemfile.lock
+
+# Временные файлы
+*.tmp
+*.temp
+*.swp
+*~
+
+# Системные файлы
+.DS_Store
+Thumbs.db
+
+# IDE файлы
+.vscode/
+.idea/
+*.code-workspace
+
+# Логи
+*.log
+
+# Кэш
+.cache/
+
+# Скрипты обработки (временные)
+add_frontmatter.sh
+add_frontmatter.ps1
+add_frontmatter.py
+copy_chapters.py
