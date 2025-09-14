@@ -32,15 +32,25 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: '3.1'
-          bundler-cache: true
+          bundler-cache: false
           cache-version: 0
+      
+      - name: Установка совместимой версии Bundler
+        run: |
+          gem install bundler
+          bundle --version
       
       - name: Настройка Pages
         id: pages
         uses: actions/configure-pages@v4
       
+      - name: Установка зависимостей
+        run: |
+          bundle config set --local deployment false
+          bundle install --verbose --retry 3
+      
       - name: Сборка с Jekyll
-        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+        run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}" --verbose
         env:
           JEKYLL_ENV: production
       
