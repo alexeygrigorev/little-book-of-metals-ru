@@ -1,0 +1,198 @@
+name: Build eBook
+
+# Workflow to automatically build .epub and .mobi eBooks from the repository's markdown content
+# This workflow assembles all sections and chapters into a complete book with table of contents
+
+on:
+  # Trigger on push to main branch
+  push:
+    branches: [ main, master ]
+  
+  # Allow manual triggering from GitHub Actions tab
+  workflow_dispatch:
+
+# Set permissions for artifact upload
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  build-ebook:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Install dependencies
+      run: |
+        # Install Pandoc for epub generation
+        sudo apt-get update
+        sudo apt-get install -y pandoc
+        
+        # Install Calibre for mobi generation
+        sudo apt-get install -y calibre
+        
+        # Verify installations
+        pandoc --version
+        ebook-convert --version
+    
+    - name: Assemble book content
+      run: |
+        # Create temporary directory for book assembly
+        mkdir -p /tmp/book-assembly
+        cd /tmp/book-assembly
+        
+        # Repository root - use GitHub workspace
+        REPO_ROOT="${GITHUB_WORKSPACE}"
+        
+        # Create the complete book markdown file
+        echo "# Удивительный мир металлов" > complete-book.md
+        echo "## Книга для подростков о металлах и металлургии" >> complete-book.md
+        echo "" >> complete-book.md
+        
+        # Add main book description from README (skip the title and TOC)
+        sed -n '6,7p' "$REPO_ROOT/README.md" >> complete-book.md
+        echo "" >> complete-book.md
+        
+        # Generate Table of Contents
+        echo "## Содержание" >> complete-book.md
+        echo "" >> complete-book.md
+        
+        # Process each part directory in order
+        for part_dir in "$REPO_ROOT"/часть_*; do
+          if [ -d "$part_dir" ]; then
+            part_name=$(basename "$part_dir")
+            
+            # Get part title from README
+            if [ -f "$part_dir/README.md" ]; then
+              part_title=$(head -1 "$part_dir/README.md" | sed 's/^# //')
+              echo "### $part_title" >> complete-book.md
+              echo "" >> complete-book.md
+              
+              # List chapters in this part
+              for chapter_file in "$part_dir"/глава_*.md; do
+                if [ -f "$chapter_file" ]; then
+                  chapter_name=$(basename "$chapter_file" .md)
+                  # Extract chapter title from the markdown file
+                  chapter_title=$(grep -m1 "^# " "$chapter_file" | sed 's/^# //' || echo "$chapter_name")
+                  echo "- $chapter_title" >> complete-book.md
+                fi
+              done
+              echo "" >> complete-book.md
+            fi
+          fi
+        done
+        
+        echo "---" >> complete-book.md
+        echo "" >> complete-book.md
+    
+    - name: Add book content
+      run: |
+        cd /tmp/book-assembly
+        REPO_ROOT="${GITHUB_WORKSPACE}"
+        
+        # Process each part directory in order
+        for part_dir in "$REPO_ROOT"/часть_*; do
+          if [ -d "$part_dir" ]; then
+            part_name=$(basename "$part_dir")
+            echo "Processing $part_name..."
+            
+            # Add part README first (skip the title line and chapter list)
+            if [ -f "$part_dir/README.md" ]; then
+              echo "" >> complete-book.md
+              # Get the part title and description, skip the chapter list
+              sed -n '1,10p' "$part_dir/README.md" | head -10 >> complete-book.md
+              echo "" >> complete-book.md
+              echo "---" >> complete-book.md
+              echo "" >> complete-book.md
+            fi
+            
+            # Add all chapters in numerical order
+            for chapter_file in "$part_dir"/глава_*.md; do
+              if [ -f "$chapter_file" ]; then
+                echo "Adding $(basename "$chapter_file")..."
+                # Remove YAML front matter if present, then add content
+                if head -1 "$chapter_file" | grep -q "^---$"; then
+                  # Skip YAML front matter (from first --- to second ---) and empty lines after
+                  awk '/^---$/{f++; if(f==2){getline; next}} f<2{next} {print}' "$chapter_file" >> complete-book.md
+                else
+                  cat "$chapter_file" >> complete-book.md
+                fi
+                echo "" >> complete-book.md
+                echo "---" >> complete-book.md
+                echo "" >> complete-book.md
+              fi
+            done
+          fi
+        done
+        
+        # Show file size for verification
+        wc -l complete-book.md
+        echo "Book assembly completed."
+    
+    - name: Generate EPUB
+      run: |
+        cd /tmp/book-assembly
+        
+        # Create metadata file for better epub formatting
+        cat > metadata.yaml << EOF
+        ---
+        title: "Удивительный мир металлов"
+        subtitle: "Книга для подростков о металлах и металлургии"
+        author: "Автор"
+        language: ru
+        subject: "Металлургия, Химия, Наука"
+        description: "Увлекательное путешествие по миру металлов - от истории металлургии до современных технологий"
+        ---
+        EOF
+        
+        # Generate EPUB using Pandoc
+        pandoc complete-book.md \
+          --metadata-file=metadata.yaml \
+          --from=markdown \
+          --to=epub3 \
+          --output=little-book-of-metals-ru.epub \
+          --toc \
+          --toc-depth=2 \
+          --split-level=1
+        
+        echo "EPUB generated successfully"
+        ls -la *.epub
+    
+    - name: Generate MOBI
+      run: |
+        cd /tmp/book-assembly
+        
+        # Convert EPUB to MOBI using Calibre
+        ebook-convert little-book-of-metals-ru.epub little-book-of-metals-ru.mobi \
+          --title "Удивительный мир металлов" \
+          --authors "Автор" \
+          --language ru \
+          --book-producer "GitHub Actions" \
+          --publisher "GitHub" \
+          --comments "Книга для подростков о металлах и металлургии"
+        
+        echo "MOBI generated successfully"
+        ls -la *.mobi
+    
+    - name: Upload EPUB artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: little-book-of-metals-ru-epub
+        path: /tmp/book-assembly/little-book-of-metals-ru.epub
+        retention-days: 30
+    
+    - name: Upload MOBI artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: little-book-of-metals-ru-mobi
+        path: /tmp/book-assembly/little-book-of-metals-ru.mobi
+        retention-days: 30
+    
+    - name: Upload assembled markdown
+      uses: actions/upload-artifact@v4
+      with:
+        name: little-book-of-metals-ru-markdown
+        path: /tmp/book-assembly/complete-book.md
+        retention-days: 7
