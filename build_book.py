@@ -374,6 +374,11 @@ def main():
         print("Usage: python build_book.py [output_directory]")
         sys.exit(1)
     
+    # Check for help
+    if len(sys.argv) == 2 and sys.argv[1] in ('-h', '--help', 'help'):
+        print(__doc__)
+        sys.exit(0)
+    
     # Determine paths
     repo_root = Path(__file__).parent
     output_dir = Path(sys.argv[1]) if len(sys.argv) == 2 else repo_root / "dist"
