@@ -43,8 +43,8 @@ jobs:
         mkdir -p /tmp/book-assembly
         cd /tmp/book-assembly
         
-        # Repository root
-        REPO_ROOT="/home/runner/work/little-book-of-metals-ru/little-book-of-metals-ru"
+        # Repository root - use GitHub workspace
+        REPO_ROOT="${GITHUB_WORKSPACE}"
         
         # Create the complete book markdown file
         echo "# Удивительный мир металлов" > complete-book.md
@@ -90,7 +90,7 @@ jobs:
     - name: Add book content
       run: |
         cd /tmp/book-assembly
-        REPO_ROOT="/home/runner/work/little-book-of-metals-ru/little-book-of-metals-ru"
+        REPO_ROOT="${GITHUB_WORKSPACE}"
         
         # Process each part directory in order
         for part_dir in "$REPO_ROOT"/часть_*; do
@@ -113,9 +113,9 @@ jobs:
               if [ -f "$chapter_file" ]; then
                 echo "Adding $(basename "$chapter_file")..."
                 # Remove YAML front matter if present, then add content
-                if grep -q "^---$" "$chapter_file"; then
-                  # Skip YAML front matter (everything between first --- and second ---)
-                  sed '1,/^---$/d; /^---$/,$d' "$chapter_file" >> complete-book.md
+                if head -1 "$chapter_file" | grep -q "^---$"; then
+                  # Skip YAML front matter (from first --- to second ---) and empty lines after
+                  awk '/^---$/{f++; if(f==2){getline; next}} f<2{next} {print}' "$chapter_file" >> complete-book.md
                 else
                   cat "$chapter_file" >> complete-book.md
                 fi
