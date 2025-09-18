@@ -73,3 +73,60 @@
 40. [Будущее металлургии](./часть_5_практика/глава_40_будущее_металлургии.md)
 41. [Словарь терминов](./часть_5_практика/глава_41_словарь.md)
 42. [Рекомендуемая литература](./часть_5_практика/глава_42_рекомендуемая_литература.md)
+
+## Сборка электронной книги
+
+Для создания электронной версии книги в форматах EPUB и MOBI используется Python-скрипт `build_book.py`.
+
+### Локальная сборка
+
+**Требования:**
+- Python 3.7+
+- [Pandoc](https://pandoc.org/installing.html) для генерации EPUB
+- [Calibre](https://calibre-ebook.com/download) для генерации MOBI
+
+**Установка зависимостей:**
+
+Ubuntu/Debian:
+```bash
+sudo apt-get update
+sudo apt-get install pandoc calibre
+pip install PyYAML
+```
+
+macOS:
+```bash
+brew install pandoc
+brew install --cask calibre
+pip install PyYAML
+```
+
+Windows:
+- Скачайте и установите [Pandoc](https://pandoc.org/installing.html)
+- Скачайте и установите [Calibre](https://calibre-ebook.com/download)
+- Установите PyYAML: `pip install PyYAML`
+
+**Использование:**
+```bash
+# Сборка в директорию dist/
+python3 build_book.py
+
+# Сборка в указанную директорию
+python3 build_book.py /path/to/output
+```
+
+**Результат:**
+Скрипт создаст файлы:
+- `little-book-of-metals-ru.epub` - для большинства e-reader'ов
+- `little-book-of-metals-ru.mobi` - для Amazon Kindle
+- `complete-book.md` - исходный файл в формате Markdown
+
+### Автоматическая сборка
+
+Книга автоматически собирается через GitHub Actions. Для запуска сборки:
+
+1. Перейдите во вкладку **Actions** в репозитории
+2. Выберите **Build eBook** 
+3. Нажмите **Run workflow**
+
+Готовые файлы будут доступны в разделе **Releases** репозитория.

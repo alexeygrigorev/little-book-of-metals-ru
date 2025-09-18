@@ -9,6 +9,11 @@ vendor/
 .bundle/
 Gemfile.lock
 
+# eBook build output
+dist/
+*.epub
+*.mobi
+
 # Временные файлы
 *.tmp
 *.temp
