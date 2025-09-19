@@ -18,9 +18,14 @@
       <div class="container">
         <div class="header-content">
           <a href="{{ '/' | relative_url }}" class="site-title">{{ site.title }}</a>
-          <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
-            ☰
-          </button>
+          <div class="header-controls">
+            <button class="control-btn font-decrease" id="fontDecrease" aria-label="Уменьшить шрифт" title="Уменьшить шрифт">A-</button>
+            <button class="control-btn font-increase" id="fontIncrease" aria-label="Увеличить шрифт" title="Увеличить шрифт">A+</button>
+            <button class="control-btn theme-toggle" id="themeToggle" aria-label="Переключить тему" title="Переключить тему">🌙</button>
+            <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+              ☰
+            </button>
+          </div>
         </div>
       </div>
       
@@ -71,6 +76,99 @@
             siteNav.classList.remove('active');
           }
         });
+
+        // Theme toggle functionality
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('bookTheme') || 'light';
+        body.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+          const currentTheme = body.getAttribute('data-theme');
+          const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+          
+          body.setAttribute('data-theme', newTheme);
+          localStorage.setItem('bookTheme', newTheme);
+          updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+          themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+        }
+
+        // Font size controls
+        const fontIncrease = document.getElementById('fontIncrease');
+        const fontDecrease = document.getElementById('fontDecrease');
+        
+        // Load saved font size
+        const savedFontSize = localStorage.getItem('bookFontSize') || '100';
+        document.documentElement.style.setProperty('--book-font-scale', savedFontSize + '%');
+        
+        fontIncrease.addEventListener('click', function() {
+          const currentSize = getCurrentFontSize();
+          const newSize = Math.min(currentSize + 10, 150); // Max 150%
+          setFontSize(newSize);
+        });
+        
+        fontDecrease.addEventListener('click', function() {
+          const currentSize = getCurrentFontSize();
+          const newSize = Math.max(currentSize - 10, 70); // Min 70%
+          setFontSize(newSize);
+        });
+        
+        function getCurrentFontSize() {
+          const fontScale = getComputedStyle(document.documentElement).getPropertyValue('--book-font-scale');
+          return parseInt(fontScale) || 100;
+        }
+        
+        function setFontSize(size) {
+          document.documentElement.style.setProperty('--book-font-scale', size + '%');
+          localStorage.setItem('bookFontSize', size.toString());
+        }
+
+        // Reading progress tracking
+        const currentPath = window.location.pathname;
+        
+        // Save current page as last read
+        if (currentPath.includes('/глава_')) {
+          localStorage.setItem('bookLastRead', currentPath);
+        }
+        
+        // Show reading progress indicator on home page
+        if (currentPath.endsWith('/') || currentPath.endsWith('index.html')) {
+          showReadingProgress();
+        }
+        
+        function showReadingProgress() {
+          const lastRead = localStorage.getItem('bookLastRead');
+          if (lastRead) {
+            // Find the link that matches the last read chapter
+            const lastReadLink = document.querySelector(`a[href*="${lastRead}"]`);
+            if (lastReadLink) {
+              // Add visual indicator
+              lastReadLink.classList.add('last-read');
+              
+              // Add "Continue reading" button if we're on the home page
+              if (window.location.pathname === '{{ "/" | relative_url }}' || window.location.pathname.endsWith('/')) {
+                const continueDiv = document.createElement('div');
+                continueDiv.className = 'continue-reading';
+                continueDiv.innerHTML = `
+                  <h3>Продолжить чтение</h3>
+                  <a href="${lastRead}" class="continue-btn">Перейти к последней прочитанной главе</a>
+                `;
+                
+                // Insert after hero section
+                const hero = document.querySelector('.hero');
+                if (hero && hero.nextElementSibling) {
+                  hero.parentNode.insertBefore(continueDiv, hero.nextElementSibling);
+                }
+              }
+            }
+          }
+        }
       });
     </script>
   </body>

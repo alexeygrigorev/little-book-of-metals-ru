@@ -16,45 +16,108 @@ layout: default
 
   <nav class="chapter-navigation">
     <div class="nav-links">
-      {% comment %}Простая навигация между главами{% endcomment %}
+      {% comment %}Улучшенная навигация между главами с поддержкой переходов между частями{% endcomment %}
       {% assign current_path = page.path %}
       {% assign path_parts = current_path | split: '/' %}
       {% assign chapter_dir = path_parts[0] %}
       {% assign current_file = path_parts[1] %}
       
-      {% comment %}Определяем номер текущей главы{% endcomment %}
-      {% assign chapter_number = current_file | remove: '.md' | split: '_' | first | remove: 'глава' %}
-      {% assign chapter_num = chapter_number | plus: 0 %}
+      {% comment %}Извлекаем номер главы из имени файла{% endcomment %}
+      {% assign chapter_number_match = current_file | split: '_' %}
+      {% assign chapter_num = chapter_number_match[1] | plus: 0 %}
       {% assign prev_num = chapter_num | minus: 1 %}
       {% assign next_num = chapter_num | plus: 1 %}
       
-      {% comment %}Форматируем номера глав{% endcomment %}
-      {% assign prev_chapter_formatted = prev_num | prepend: '0' | slice: -2, 2 %}
-      {% assign next_chapter_formatted = next_num | prepend: '0' | slice: -2, 2 %}
+      {% comment %}Форматируем номера глав (01, 02, etc.){% endcomment %}
+      {% if prev_num < 10 %}
+        {% assign prev_chapter_formatted = prev_num | prepend: '0' %}
+      {% else %}
+        {% assign prev_chapter_formatted = prev_num %}
+      {% endif %}
       
-      {% comment %}Предыдущая глава{% endcomment %}
+      {% if next_num < 10 %}
+        {% assign next_chapter_formatted = next_num | prepend: '0' %}
+      {% else %}
+        {% assign next_chapter_formatted = next_num %}
+      {% endif %}
+      
+      {% comment %}Ищем предыдущую главу{% endcomment %}
+      {% assign prev_found = false %}
       {% if prev_num > 0 %}
         {% capture prev_link %}{{ chapter_dir }}/глава_{{ prev_chapter_formatted }}{% endcapture %}
         {% for page_item in site.pages %}
-          {% if page_item.path contains prev_link %}
-            <a href="{{ page_item.url }}" class="nav-link prev-link">
+          {% if page_item.path contains prev_link and page_item.path contains '.md' %}
+            <a href="{{ page_item.url | relative_url }}" class="nav-link prev-link">
               ← Предыдущая: {{ page_item.title | default: "Глава" }}
             </a>
+            {% assign prev_found = true %}
             {% break %}
           {% endif %}
         {% endfor %}
+        
+        {% comment %}Если предыдущая глава не найдена в текущей части, ищем в предыдущей части{% endcomment %}
+        {% unless prev_found %}
+          {% assign current_part = chapter_dir | split: '_' | last | plus: 0 %}
+          {% assign prev_part = current_part | minus: 1 %}
+          {% if prev_part > 0 %}
+            {% capture prev_part_dir %}часть_{{ prev_part }}{% endcapture %}
+            {% assign prev_part_last_chapter = 0 %}
+            {% for page_item in site.pages %}
+              {% if page_item.path contains prev_part_dir and page_item.path contains 'глава_' %}
+                {% assign page_chapter = page_item.path | split: '/' | last | split: '_' %}
+                {% assign page_chapter_num = page_chapter[1] | plus: 0 %}
+                {% if page_chapter_num > prev_part_last_chapter %}
+                  {% assign prev_part_last_chapter = page_chapter_num %}
+                  {% assign prev_part_last_page = page_item %}
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+            {% if prev_part_last_chapter > 0 %}
+              <a href="{{ prev_part_last_page.url | relative_url }}" class="nav-link prev-link">
+                ← Предыдущая: {{ prev_part_last_page.title | default: "Глава" }}
+              </a>
+            {% endif %}
+          {% endif %}
+        {% endunless %}
       {% endif %}
       
-      {% comment %}Следующая глава{% endcomment %}
+      {% comment %}Ищем следующую главу{% endcomment %}
+      {% assign next_found = false %}
       {% capture next_link %}{{ chapter_dir }}/глава_{{ next_chapter_formatted }}{% endcapture %}
       {% for page_item in site.pages %}
-        {% if page_item.path contains next_link %}
-          <a href="{{ page_item.url }}" class="nav-link next-link">
+        {% if page_item.path contains next_link and page_item.path contains '.md' %}
+          <a href="{{ page_item.url | relative_url }}" class="nav-link next-link">
             Следующая: {{ page_item.title | default: "Глава" }} →
           </a>
+          {% assign next_found = true %}
           {% break %}
         {% endif %}
       {% endfor %}
+      
+      {% comment %}Если следующая глава не найдена в текущей части, ищем в следующей части{% endcomment %}
+      {% unless next_found %}
+        {% assign current_part = chapter_dir | split: '_' | last | plus: 0 %}
+        {% assign next_part = current_part | plus: 1 %}
+        {% if next_part <= 5 %}
+          {% capture next_part_dir %}часть_{{ next_part }}{% endcapture %}
+          {% assign next_part_first_chapter = 999 %}
+          {% for page_item in site.pages %}
+            {% if page_item.path contains next_part_dir and page_item.path contains 'глава_' %}
+              {% assign page_chapter = page_item.path | split: '/' | last | split: '_' %}
+              {% assign page_chapter_num = page_chapter[1] | plus: 0 %}
+              {% if page_chapter_num < next_part_first_chapter %}
+                {% assign next_part_first_chapter = page_chapter_num %}
+                {% assign next_part_first_page = page_item %}
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          {% if next_part_first_chapter < 999 %}
+            <a href="{{ next_part_first_page.url | relative_url }}" class="nav-link next-link">
+              Следующая: {{ next_part_first_page.title | default: "Глава" }} →
+            </a>
+          {% endif %}
+        {% endif %}
+      {% endunless %}
     </div>
     
     <div class="back-to-contents">
@@ -73,40 +136,46 @@ layout: default
   text-align: center;
   margin-bottom: 2rem;
   padding-bottom: 1rem;
-  border-bottom: 2px solid #e9ecef;
+  border-bottom: 2px solid var(--border-color);
 }
 
 .chapter-part {
-  color: #666;
-  font-size: 0.9rem;
+  color: var(--text-color);
+  opacity: 0.7;
+  font-size: calc(0.9rem * var(--book-font-scale));
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .chapter-title {
-  color: #007cba;
-  font-size: 2rem;
+  color: var(--primary-color);
+  font-size: calc(2rem * var(--book-font-scale));
   margin: 0;
   font-weight: 600;
 }
 
 .chapter-content {
-  font-size: 1.1rem;
+  font-size: calc(1.1rem * var(--book-font-scale));
   line-height: 1.7;
   margin-bottom: 3rem;
+  color: var(--text-color);
 }
 
 .chapter-content h2 {
   margin-top: 2rem;
   margin-bottom: 1rem;
   padding-bottom: 0.5rem;
-  border-bottom: 1px solid #e9ecef;
+  border-bottom: 1px solid var(--border-color);
+  color: var(--primary-color);
+  font-size: calc(1.4rem * var(--book-font-scale));
 }
 
 .chapter-content h3 {
   margin-top: 1.5rem;
   margin-bottom: 0.75rem;
+  color: var(--primary-color);
+  font-size: calc(1.2rem * var(--book-font-scale));
 }
 
 .chapter-content p {
@@ -123,7 +192,7 @@ layout: default
 }
 
 .chapter-navigation {
-  border-top: 2px solid #e9ecef;
+  border-top: 2px solid var(--border-color);
   padding-top: 2rem;
   margin-top: 3rem;
 }
@@ -138,20 +207,21 @@ layout: default
 .nav-link {
   flex: 1;
   padding: 1rem;
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
+  background-color: var(--secondary-bg);
+  border: 1px solid var(--border-color);
   border-radius: 8px;
   text-decoration: none;
-  color: #007cba;
+  color: var(--primary-color);
   transition: all 0.2s;
   font-weight: 500;
+  font-size: calc(0.95rem * var(--book-font-scale));
 }
 
 .nav-link:hover {
-  background-color: #e9ecef;
+  background-color: var(--border-color);
   text-decoration: none;
   transform: translateY(-1px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px var(--card-shadow);
 }
 
 .prev-link {
@@ -170,16 +240,17 @@ layout: default
 .back-to-contents a {
   display: inline-block;
   padding: 0.75rem 1.5rem;
-  background-color: #007cba;
+  background-color: var(--primary-color);
   color: white;
   text-decoration: none;
   border-radius: 6px;
   font-weight: 500;
+  font-size: calc(1rem * var(--book-font-scale));
   transition: background-color 0.2s;
 }
 
 .back-to-contents a:hover {
-  background-color: #005577;
+  background-color: var(--primary-dark);
   text-decoration: none;
 }
 
@@ -193,11 +264,19 @@ layout: default
   }
   
   .chapter-title {
-    font-size: 1.5rem;
+    font-size: calc(1.5rem * var(--book-font-scale));
   }
   
   .chapter-content {
-    font-size: 1rem;
+    font-size: calc(1rem * var(--book-font-scale));
+  }
+  
+  .chapter-content h2 {
+    font-size: calc(1.2rem * var(--book-font-scale));
+  }
+  
+  .chapter-content h3 {
+    font-size: calc(1.1rem * var(--book-font-scale));
   }
 }
 </style>
