@@ -1,0 +1,415 @@
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+  line-height: 1.6;
+  color: #333;
+  background-color: #ffffff;
+}
+
+/* Container */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+.site-header {
+  background: linear-gradient(135deg, #007cba 0%, #005577 100%);
+  color: white;
+  position: relative;
+  z-index: 1000;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+}
+
+.site-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+}
+
+.site-title:hover {
+  color: white;
+  text-decoration: none;
+}
+
+/* Mobile Navigation */
+.nav-toggle {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: white;
+  cursor: pointer;
+  padding: 0.5rem;
+}
+
+.site-nav {
+  background-color: rgba(0, 85, 119, 0.95);
+}
+
+.nav-menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0.5rem 0;
+}
+
+.nav-menu li {
+  margin: 0 0.5rem;
+}
+
+.nav-menu a {
+  color: white;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+  display: block;
+}
+
+.nav-menu a:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  text-decoration: none;
+}
+
+/* Main content */
+.main-content {
+  min-height: calc(100vh - 200px);
+  padding: 2rem 0;
+}
+
+/* Hero section */
+.hero {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  color: #007cba;
+  margin-bottom: 1rem;
+  font-weight: 700;
+}
+
+.hero .subtitle {
+  font-size: 1.2rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+.hero .description {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto 2rem;
+  color: #555;
+}
+
+.hero-image {
+  max-width: 300px;
+  margin: 2rem auto;
+  display: block;
+}
+
+/* Book sections */
+.book-sections {
+  margin-top: 3rem;
+}
+
+.book-sections h2 {
+  text-align: center;
+  font-size: 2rem;
+  color: #007cba;
+  margin-bottom: 2rem;
+}
+
+.sections-grid {
+  display: grid;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.section-card {
+  background: white;
+  border: 1px solid #e9ecef;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 124, 186, 0.1);
+  transition: all 0.3s ease;
+}
+
+.section-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 20px rgba(0, 124, 186, 0.15);
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.section-number {
+  background: linear-gradient(135deg, #007cba, #005577);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.section-title {
+  font-size: 1.3rem;
+  color: #007cba;
+  margin: 0;
+  font-weight: 600;
+}
+
+.section-description {
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-style: italic;
+}
+
+.chapter-list {
+  list-style: none;
+}
+
+.chapter-list li {
+  margin-bottom: 0.5rem;
+}
+
+.chapter-list a {
+  color: #333;
+  text-decoration: none;
+  padding: 0.3rem 0;
+  display: block;
+  transition: color 0.2s ease;
+  font-size: 0.95rem;
+}
+
+.chapter-list a:hover {
+  color: #007cba;
+  text-decoration: none;
+}
+
+/* About section */
+.about-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 3rem 0;
+  margin-top: 4rem;
+  border-radius: 12px;
+}
+
+.about-section h2 {
+  text-align: center;
+  color: #007cba;
+  margin-bottom: 2rem;
+}
+
+.about-content {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.about-content p {
+  margin-bottom: 1rem;
+  color: #555;
+}
+
+/* Footer */
+.site-footer {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-top: 1px solid #e9ecef;
+  padding: 2rem 0;
+  margin-top: 3rem;
+  text-align: center;
+  color: #666;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  color: #007cba;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+a {
+  color: #007cba;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: #005577;
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Responsive Design - Mobile First */
+
+/* Mobile styles (default) */
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+  
+  .site-nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: #005577;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transform: translateY(-100%);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+  }
+  
+  .site-nav.active {
+    transform: translateY(0);
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  .nav-menu {
+    flex-direction: column;
+    padding: 1rem 0;
+  }
+  
+  .nav-menu li {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .nav-menu a {
+    padding: 1rem;
+    border-radius: 0;
+    text-align: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .hero h1 {
+    font-size: 2rem;
+  }
+  
+  .hero .subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .main-content {
+    padding: 1rem 0;
+  }
+  
+  .sections-grid {
+    gap: 1.5rem;
+  }
+  
+  .section-card {
+    padding: 1rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+  
+  .section-number {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .about-section {
+    padding: 2rem 0;
+  }
+  
+  .hero-image {
+    max-width: 250px;
+  }
+}
+
+/* Tablet styles */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .sections-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.2rem;
+  }
+}
+
+/* Desktop styles */
+@media (min-width: 1025px) {
+  .sections-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .hero h1 {
+    font-size: 2.5rem;
+  }
+  
+  .section-header {
+    flex-direction: row;
+  }
+}
+
+/* Focus styles for accessibility */
+.nav-toggle:focus,
+.nav-menu a:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* Print styles */
+@media print {
+  .site-header,
+  .site-nav,
+  .site-footer {
+    display: none;
+  }
+  
+  .main-content {
+    min-height: auto;
+  }
+}
