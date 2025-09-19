@@ -100,22 +100,16 @@ layout: default
         {% assign next_part = current_part | plus: 1 %}
         {% if next_part <= 5 %}
           {% capture next_part_dir %}часть_{{ next_part }}{% endcapture %}
-          {% assign next_part_first_chapter = 999 %}
+          {% comment %}Navigate to part intro instead of first chapter{% endcomment %}
           {% for page_item in site.pages %}
-            {% if page_item.path contains next_part_dir and page_item.path contains 'глава_' %}
-              {% assign page_chapter = page_item.path | split: '/' | last | split: '_' %}
-              {% assign page_chapter_num = page_chapter[1] | plus: 0 %}
-              {% if page_chapter_num < next_part_first_chapter %}
-                {% assign next_part_first_chapter = page_chapter_num %}
-                {% assign next_part_first_page = page_item %}
-              {% endif %}
+            {% if page_item.path contains next_part_dir and page_item.path contains 'README.md' %}
+              <a href="{{ page_item.url | relative_url }}" class="nav-link next-link">
+                Следующая часть: {{ page_item.title | default: "Часть" }} →
+              </a>
+              {% assign next_found = true %}
+              {% break %}
             {% endif %}
           {% endfor %}
-          {% if next_part_first_chapter < 999 %}
-            <a href="{{ next_part_first_page.url | relative_url }}" class="nav-link next-link">
-              Следующая: {{ next_part_first_page.title | default: "Глава" }} →
-            </a>
-          {% endif %}
         {% endif %}
       {% endunless %}
     </div>

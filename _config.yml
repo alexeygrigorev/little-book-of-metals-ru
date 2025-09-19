@@ -46,25 +46,70 @@ defaults:
       layout: "chapter"
       part: "Часть 1: История металлургии"
   - scope:
+      path: "часть_1_история/README.md"
+    values:
+      layout: "part"
+      part_number: 1
+      title: "История металлургии"
+      subtitle: "От каменного века до наших дней"
+      first_chapter: "/часть_1_история/глава_01_введение.html"
+      first_chapter_title: "Глава 1: Введение - Мир металлов вокруг нас"
+  - scope:
       path: "часть_2_основы"
     values:
       layout: "chapter"
       part: "Часть 2: Основы металлургии"
+  - scope:
+      path: "часть_2_основы/README.md"
+    values:
+      layout: "part"
+      part_number: 2
+      title: "Основы металлургии"
+      subtitle: "Научные основы металлов и сплавов"
+      first_chapter: "/часть_2_основы/глава_09_что_такое_металл.html"
+      first_chapter_title: "Глава 9: Что такое металл? Строение и свойства"
   - scope:
       path: "часть_3_металлы"
     values:
       layout: "chapter"
       part: "Часть 3: Галерея металлов"
   - scope:
+      path: "часть_3_металлы/README.md"
+    values:
+      layout: "part"
+      part_number: 3
+      title: "Галерея металлов"
+      subtitle: "Подробные портреты важнейших металлов"
+      first_chapter: "/часть_3_металлы/глава_13_золото.html"
+      first_chapter_title: "Глава 13: Золото - металл фараонов и пиратов"
+  - scope:
       path: "часть_4_применения"
     values:
       layout: "chapter"
       part: "Часть 4: Металлы вокруг нас"
   - scope:
+      path: "часть_4_применения/README.md"
+    values:
+      layout: "part"
+      part_number: 4
+      title: "Металлы вокруг нас"
+      subtitle: "Применение металлов в современном мире"
+      first_chapter: "/часть_4_применения/глава_31_компьютеры.html"
+      first_chapter_title: "Глава 31: Металлы в компьютерах и смартфонах"
+  - scope:
       path: "часть_5_практика"
     values:
       layout: "chapter"
       part: "Часть 5: Практика и будущее"
+  - scope:
+      path: "часть_5_практика/README.md"
+    values:
+      layout: "part"
+      part_number: 5
+      title: "Практика и будущее"
+      subtitle: "Эксперименты, профессии и перспективы"
+      first_chapter: "/часть_5_практика/глава_37_безопасные_эксперименты.html"
+      first_chapter_title: "Глава 37: Безопасные эксперименты с металлами"
 
 # Навигация
 navigation:

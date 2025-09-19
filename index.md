@@ -22,7 +22,9 @@ title: "Удивительный мир металлов"
     <div class="section-card">
       <div class="section-header">
         <div class="section-number">1</div>
-        <h3 class="section-title">История металлургии</h3>
+        <h3 class="section-title">
+          <a href="{{ '/часть_1_история/' | relative_url }}" class="section-title-link">История металлургии</a>
+        </h3>
       </div>
       <p class="section-description">Путешествие от каменного века до наших дней — как человечество открывало и осваивало металлы.</p>
       <ul class="chapter-list">
@@ -41,7 +43,9 @@ title: "Удивительный мир металлов"
     <div class="section-card">
       <div class="section-header">
         <div class="section-number">2</div>
-        <h3 class="section-title">Основы металлургии</h3>
+        <h3 class="section-title">
+          <a href="{{ '/часть_2_основы/' | relative_url }}" class="section-title-link">Основы металлургии</a>
+        </h3>
       </div>
       <p class="section-description">Научные основы: что такое металл, как они устроены, как их добывают и что такое сплавы.</p>
       <ul class="chapter-list">
@@ -56,7 +60,9 @@ title: "Удивительный мир металлов"
     <div class="section-card">
       <div class="section-header">
         <div class="section-number">3</div>
-        <h3 class="section-title">Галерея металлов</h3>
+        <h3 class="section-title">
+          <a href="{{ '/часть_3_металлы/' | relative_url }}" class="section-title-link">Галерея металлов</a>
+        </h3>
       </div>
       <p class="section-description">Подробные портреты важнейших металлов — от золота до урана.</p>
       <ul class="chapter-list">
@@ -85,7 +91,9 @@ title: "Удивительный мир металлов"
     <div class="section-card">
       <div class="section-header">
         <div class="section-number">4</div>
-        <h3 class="section-title">Металлы вокруг нас</h3>
+        <h3 class="section-title">
+          <a href="{{ '/часть_4_применения/' | relative_url }}" class="section-title-link">Металлы вокруг нас</a>
+        </h3>
       </div>
       <p class="section-description">Как металлы используются в компьютерах, автомобилях, космосе, медицине и других областях.</p>
       <ul class="chapter-list">
@@ -102,7 +110,9 @@ title: "Удивительный мир металлов"
     <div class="section-card">
       <div class="section-header">
         <div class="section-number">5</div>
-        <h3 class="section-title">Практика и будущее</h3>
+        <h3 class="section-title">
+          <a href="{{ '/часть_5_практика/' | relative_url }}" class="section-title-link">Практика и будущее</a>
+        </h3>
       </div>
       <p class="section-description">Эксперименты, профессии, искусство и взгляд в будущее металлургии.</p>
       <ul class="chapter-list">

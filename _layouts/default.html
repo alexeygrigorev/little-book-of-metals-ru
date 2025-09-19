@@ -131,9 +131,10 @@
 
         // Reading progress tracking
         const currentPath = window.location.pathname;
+        const decodedPath = decodeURIComponent(currentPath);
         
         // Save current page as last read
-        if (currentPath.includes('/глава_')) {
+        if (decodedPath.includes('/глава_')) {
           localStorage.setItem('bookLastRead', currentPath);
         }
         
@@ -153,11 +154,32 @@
               
               // Add "Continue reading" button if we're on the home page
               if (window.location.pathname === '{{ "/" | relative_url }}' || window.location.pathname.endsWith('/')) {
+                // Extract part and chapter info from the path
+                const decodedPath = decodeURIComponent(lastRead);
+                const pathParts = decodedPath.split('/');
+                let partName = '';
+                let chapterName = lastReadLink.textContent || 'Глава';
+                
+                // Extract part name from path
+                const partSegment = pathParts.find(part => part.includes('часть_'));
+                if (partSegment) {
+                  const partNumber = partSegment.split('_')[1];
+                  const partNames = {
+                    '1': 'История металлургии',
+                    '2': 'Основы металлургии', 
+                    '3': 'Галерея металлов',
+                    '4': 'Металлы вокруг нас',
+                    '5': 'Практика и будущее'
+                  };
+                  partName = partNames[partNumber] || '';
+                }
+                
                 const continueDiv = document.createElement('div');
                 continueDiv.className = 'continue-reading';
                 continueDiv.innerHTML = `
                   <h3>Продолжить чтение</h3>
-                  <a href="${lastRead}" class="continue-btn">Перейти к последней прочитанной главе</a>
+                  ${partName ? `<p class="continue-part">Часть ${partSegment?.split('_')[1]}: ${partName}</p>` : ''}
+                  <a href="${lastRead}" class="continue-btn">${chapterName}</a>
                 `;
                 
                 // Insert after hero section
