@@ -9,6 +9,11 @@ vendor/
 .bundle/
 Gemfile.lock
 
+# eBook build output
+dist/
+*.epub
+*.mobi
+
 # Временные файлы
 *.tmp
 *.temp
@@ -34,4 +39,4 @@ Thumbs.db
 add_frontmatter.sh
 add_frontmatter.ps1
 add_frontmatter.py
-copy_chapters.py
+copy_chapters.py__pycache__/
